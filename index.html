@@ -2,108 +2,245 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🎮 EaglerX </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🎮 EaglerX Launcher</title>
   <style>
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', sans-serif;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     body {
-      background-color: #0f0f0f;
+      background: linear-gradient(135deg, #1a1a2e 0%, #2c1446 100%);
       color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
       padding: 2rem;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    body.light {
+      background: linear-gradient(135deg, #e0e0e0 0%, #ffffff 100%);
+      color: #111;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      padding: 2.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    body.light .container {
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
       font-size: 2.5rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(90deg, #B388FF, #7C4DFF);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 800;
     }
 
     .client-group {
-      width: 100%;
-      max-width: 500px;
-      background: #1c1c1c;
-      border-radius: 12px;
       margin-bottom: 1rem;
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      border-radius: 16px;
+      position: relative;
+      width: 100%;
+      max-width: 600px;
     }
 
     .client-header {
-      padding: 1rem;
-      font-size: 1.2rem;
-      font-weight: bold;
-      background: #292929;
+      padding: 1.25rem 1.5rem;
+      background: rgba(255, 255, 255, 0.08);
       cursor: pointer;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      transition: background 0.3s ease;
+      justify-content: space-between;
+      border-radius: 16px;
+      position: relative;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 1.1rem;
+      color: inherit;
+      user-select: none;
+    }
+
+    body.light .client-header {
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      color: #222;
     }
 
     .client-header:hover {
-      background: #333;
+      background: rgba(255, 255, 255, 0.12);
     }
 
-    .arrow {
-      transition: transform 0.3s ease;
+    body.light .client-header:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .featured-header {
+      background: rgba(124, 77, 255, 0.15);
+      border: 2px solid #9D4CFF;
+    }
+
+    .featured-header:hover {
+      background: rgba(124, 77, 255, 0.2);
+    }
+
+    .recommended-badge {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      background: linear-gradient(90deg, #FF00FF, #9D4CFF);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px rgba(157, 76, 255, 0.3);
     }
 
     .client-versions {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.4s ease;
-      display: flex;
-      flex-direction: column;
+      transition: max-height 0.3s ease-out;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+    }
+
+    body.light .client-versions {
+      background: rgba(0, 0, 0, 0.02);
     }
 
     .client-versions.open {
-      max-height: 500px;
+      max-height: 300px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: none;
+    }
+
+    body.light .client-versions.open {
+      border: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .version-button {
-      padding: 1rem;
-      background: #222;
-      color: white;
+      width: 100%;
+      padding: 1rem 1.5rem;
+      background: transparent;
       border: none;
-      border-top: 1px solid #333;
-      text-align: left;
-      font-size: 1rem;
+      color: #fff;
       cursor: pointer;
+      font-size: 1rem;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      transition: background 0.3s ease;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+    }
+
+    body.light .version-button {
+      color: #222;
     }
 
     .version-button:hover {
-      background: #2e2e2e;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    body.light .version-button:hover {
+      background: rgba(0, 0, 0, 0.05);
     }
 
     .version-tag {
-      padding: 2px 8px;
+      padding: 0.25rem 0.75rem;
       border-radius: 8px;
-      font-size: 0.8rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+
+    .version-tag.wasm {
+      background: linear-gradient(90deg, #FF00FF, #9D4CFF);
+      color: white;
+      opacity: 1;
+      box-shadow: 0 2px 8px rgba(157, 76, 255, 0.2);
+    }
+
+    .version-tag.js {
+      background: rgba(255, 255, 255, 0.1);
+      color: #B39DDB;
+    }
+
+    body.light .version-tag.js {
+      background: #ddd;
+      color: #555;
+      opacity: 1;
+    }
+
+    body.light .version-tag.wasm {
+      background: linear-gradient(90deg, #9D4CFF, #FF00FF);
       color: #fff;
+      opacity: 1;
     }
 
-    .js {
-      background: #d97706;
+    .arrow {
+      transition: transform 0.3s ease;
+      user-select: none;
     }
 
-    .wasm {
-      background: #10b981;
+    .client-versions.open + .client-header .arrow,
+    .active .arrow {
+      transform: rotate(180deg);
+    }
+
+    /* Theme toggle button */
+
+    #theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(124, 77, 255, 0.2);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: background 0.3s ease, color 0.3s ease;
+      box-shadow: 0 4px 8px rgba(124, 77, 255, 0.2);
+      z-index: 1000;
+      user-select: none;
+    }
+
+    #theme-toggle:hover {
+      background: rgba(124, 77, 255, 0.3);
     }
   </style>
 </head>
 <body>
+  <button id="theme-toggle">Light Mode</button>
+
   <h1>🎮 EaglerX Launcher</h1>
 
   <div class="client-group">
@@ -178,6 +315,17 @@
         alert("Client not found.");
       }
     }
+
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+
+      if (document.body.classList.contains('light')) {
+        themeToggle.textContent = 'Dark Mode';
+      } else {
+        themeToggle.textContent = 'Light Mode';
+      }
+    });
   </script>
 </body>
 </html>

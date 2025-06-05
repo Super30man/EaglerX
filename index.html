@@ -204,27 +204,5 @@
         </div>
     </div>
 
-    <script>
-        // Camera movement
-        const scene = document.querySelector('.scene');
-        let mouseX = 0;
-        let mouseY = 0;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX - window.innerWidth/2) * 0.01;
-            mouseY = (e.clientY - window.innerHeight/2) * 0.01;
-
-            scene.style.transform = `
-                rotateX(${-mouseY}deg)
-                rotateY(${mouseX}deg)
-                translateZ(50px)
-            `;
-
-            document.querySelector('.container').style.transform = `
-                translateX(${mouseX * 0.3}px)
-                translateY(${mouseY * 0.3}px)
-            `;
-        });
-    </script>
 </body>
 </html>

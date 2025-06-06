@@ -159,6 +159,13 @@
       color: #B39DDB;
     }
 
+    .version-tag.combined {
+      background: linear-gradient(90deg, #00C9FF, #92FE9D);
+      color: #111;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0, 201, 255, 0.2);
+    }
+
     .arrow {
       transition: transform 0.3s ease;
     }
@@ -229,7 +236,7 @@
       <div class="client-versions" id="classic-versions">
         <button onclick="selectClient('1.12')" class="version-button">
           <span>1.12</span>
-          <div class="version-tag js">JS</div>
+          <div class="version-tag combined">JS + WASM</div>
         </button>
         <button onclick="selectClient('1.5.2')" class="version-button">
           <span>1.5.2</span>
@@ -238,6 +245,10 @@
         <button onclick="selectClient('22w43a')" class="version-button">
           <span>22w43a</span>
           <div class="version-tag js">JS</div>
+        </button>
+        <button onclick="selectClient('1.8.8')" class="version-button">
+          <span>1.8.8</span>
+          <div class="version-tag combined">JS + WASM</div>
         </button>
       </div>
     </div>
@@ -260,7 +271,8 @@
         "Precision": "https://super30man.github.io/EaglerX/a3/",
         "1.12": "https://super30man.github.io/EaglerX/a5/",
         "1.5.2": "https://super30man.github.io/EaglerX/a1/",
-        "22w43a": "https://super30man.github.io/EaglerX/a2/"
+        "22w43a": "https://super30man.github.io/EaglerX/a2/",
+        "1.8.8": "https://super30man.github.io/EaglerX/a7/"
       };
 
       const url = clientUrls[client];

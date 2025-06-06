@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <title>🎮 EaglerX Launcher</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EaglerX</title>
   <style>
     * {
       margin: 0;
@@ -23,12 +22,6 @@
       min-height: 100vh;
       text-align: center;
       padding: 2rem;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-
-    body.light {
-      background: linear-gradient(135deg, #e0e0e0 0%, #ffffff 100%);
-      color: #111;
     }
 
     .container {
@@ -40,13 +33,6 @@
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 24px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    body.light .container {
-      background: rgba(0, 0, 0, 0.05);
-      border: 1px solid rgba(0, 0, 0, 0.1);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
 
@@ -64,8 +50,6 @@
       margin-bottom: 1rem;
       border-radius: 16px;
       position: relative;
-      width: 100%;
-      max-width: 600px;
     }
 
     .client-header {
@@ -76,50 +60,13 @@
       align-items: center;
       justify-content: space-between;
       border-radius: 16px;
-      position: relative;
       transition: all 0.3s ease;
       border: 1px solid rgba(255, 255, 255, 0.1);
       font-size: 1.1rem;
-      color: inherit;
-      user-select: none;
-    }
-
-    body.light .client-header {
-      background: rgba(0, 0, 0, 0.05);
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      color: #222;
     }
 
     .client-header:hover {
       background: rgba(255, 255, 255, 0.12);
-    }
-
-    body.light .client-header:hover {
-      background: rgba(0, 0, 0, 0.1);
-    }
-
-    .featured-header {
-      background: rgba(124, 77, 255, 0.15);
-      border: 2px solid #9D4CFF;
-    }
-
-    .featured-header:hover {
-      background: rgba(124, 77, 255, 0.2);
-    }
-
-    .recommended-badge {
-      position: absolute;
-      top: -12px;
-      right: -12px;
-      background: linear-gradient(90deg, #FF00FF, #9D4CFF);
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: bold;
-      color: white;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      box-shadow: 0 4px 12px rgba(157, 76, 255, 0.3);
     }
 
     .client-versions {
@@ -131,18 +78,10 @@
       border-bottom-right-radius: 16px;
     }
 
-    body.light .client-versions {
-      background: rgba(0, 0, 0, 0.02);
-    }
-
-    .client-versions.open {
+    .client-versions.active {
       max-height: 300px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-top: none;
-    }
-
-    body.light .client-versions.open {
-      border: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .version-button {
@@ -159,16 +98,8 @@
       transition: all 0.3s ease;
     }
 
-    body.light .version-button {
-      color: #222;
-    }
-
     .version-button:hover {
       background: rgba(255, 255, 255, 0.05);
-    }
-
-    body.light .version-button:hover {
-      background: rgba(0, 0, 0, 0.05);
     }
 
     .version-tag {
@@ -191,113 +122,93 @@
       color: #B39DDB;
     }
 
-    body.light .version-tag.js {
-      background: #ddd;
-      color: #555;
-      opacity: 1;
-    }
-
-    body.light .version-tag.wasm {
-      background: linear-gradient(90deg, #9D4CFF, #FF00FF);
-      color: #fff;
-      opacity: 1;
-    }
-
     .arrow {
       transition: transform 0.3s ease;
-      user-select: none;
     }
 
-    .client-versions.open + .client-header .arrow,
     .active .arrow {
       transform: rotate(180deg);
     }
 
-    /* Theme toggle button */
-
-    #theme-toggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(124, 77, 255, 0.2);
-      color: #fff;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 0.9rem;
+    .recommended-badge {
+      background: linear-gradient(90deg, #FF00FF, #9D4CFF);
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 0.7rem;
       font-weight: bold;
+      color: white;
       text-transform: uppercase;
-      transition: background 0.3s ease, color 0.3s ease;
-      box-shadow: 0 4px 8px rgba(124, 77, 255, 0.2);
-      z-index: 1000;
-      user-select: none;
-    }
-
-    #theme-toggle:hover {
-      background: rgba(124, 77, 255, 0.3);
+      letter-spacing: 0.5px;
+      margin-left: 10px;
     }
   </style>
 </head>
 <body>
-  <button id="theme-toggle">Light Mode</button>
+  <div class="container">
+    <h1>🎮 EaglerX Launcher</h1>
 
-  <h1>🎮 EaglerX Launcher</h1>
+    <!-- Resent Client -->
+    <div class="client-group">
+      <div class="client-header" onclick="toggleGroup('resent')">
+        <span>Resent Client</span>
+        <span class="arrow">↓</span>
+      </div>
+      <div class="client-versions" id="resent-versions">
+        <button onclick="selectClient('Resent')" class="version-button">
+          <span>Resent</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <div class="version-tag js">JS</div>
+            <div class="recommended-badge">Recommended</div>
+          </div>
+        </button>
+      </div>
+    </div>
 
-  <div class="client-group">
-    <div class="client-header" onclick="toggleGroup('resent')">
-      <span>Resent Client</span>
-      <span class="arrow" id="arrow-resent">↓</span>
+    <!-- Precision Client -->
+    <div class="client-group">
+      <div class="client-header" onclick="toggleGroup('precision')">
+        <span>Precision Client</span>
+        <span class="arrow">↓</span>
+      </div>
+      <div class="client-versions" id="precision-versions">
+        <button onclick="selectClient('Precision')" class="version-button">
+          <span>Precision</span>
+          <div class="version-tag wasm">WASM</div>
+        </button>
+      </div>
     </div>
-    <div class="client-versions" id="resent-versions">
-      <button onclick="selectClient('Resent')" class="version-button">
-        <span>Resent</span>
-        <div class="version-tag js">JS</div>
-      </button>
-    </div>
-  </div>
 
-  <div class="client-group">
-    <div class="client-header" onclick="toggleGroup('precision')">
-      <span>Precision Client</span>
-      <span class="arrow" id="arrow-precision">↓</span>
-    </div>
-    <div class="client-versions" id="precision-versions">
-      <button onclick="selectClient('Precision')" class="version-button">
-        <span>Precision</span>
-        <div class="version-tag wasm">WASM</div>
-      </button>
-    </div>
-  </div>
-
-  <div class="client-group">
-    <div class="client-header" onclick="toggleGroup('classic')">
-      <span>Classic Versions</span>
-      <span class="arrow" id="arrow-classic">↓</span>
-    </div>
-    <div class="client-versions" id="classic-versions">
-      <button onclick="selectClient('1.12')" class="version-button">
-        <span>1.12</span>
-        <div class="version-tag js">JS</div>
-      </button>
-      <button onclick="selectClient('1.5.2')" class="version-button">
-        <span>1.5.2</span>
-        <div class="version-tag wasm">WASM</div>
-      </button>
-      <button onclick="selectClient('22w43a')" class="version-button">
-        <span>22w43a</span>
-        <div class="version-tag js">JS</div>
-      </button>
+    <!-- Classic Versions -->
+    <div class="client-group">
+      <div class="client-header" onclick="toggleGroup('classic')">
+        <span>Classic Versions</span>
+        <span class="arrow">↓</span>
+      </div>
+      <div class="client-versions" id="classic-versions">
+        <button onclick="selectClient('1.12')" class="version-button">
+          <span>1.12</span>
+          <div class="version-tag js">JS</div>
+        </button>
+        <button onclick="selectClient('1.5.2')" class="version-button">
+          <span>1.5.2</span>
+          <div class="version-tag wasm">WASM</div>
+        </button>
+        <button onclick="selectClient('22w43a')" class="version-button">
+          <span>22w43a</span>
+          <div class="version-tag js">JS</div>
+        </button>
+      </div>
     </div>
   </div>
 
   <script>
     function toggleGroup(groupId) {
       const section = document.getElementById(groupId + '-versions');
-      const arrow = document.getElementById('arrow-' + groupId);
+      const header = section.previousElementSibling;
+      const arrow = header.querySelector('.arrow');
 
-      section.classList.toggle('open');
-      arrow.style.transform = section.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+      section.classList.toggle('active');
+      header.classList.toggle('active');
     }
 
     function selectClient(client) {
@@ -316,17 +227,6 @@
         alert("Client not found.");
       }
     }
-
-    const themeToggle = document.getElementById('theme-toggle');
-    themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('light');
-
-      if (document.body.classList.contains('light')) {
-        themeToggle.textContent = 'Dark Mode';
-      } else {
-        themeToggle.textContent = 'Light Mode';
-      }
-    });
   </script>
 </body>
 </html>

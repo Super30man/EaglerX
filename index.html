@@ -116,7 +116,7 @@
     }
 
     .client-versions.active {
-      max-height: 800px;
+      max-height: 300px;
       border: 1px solid var(--border-color);
       border-top: none;
     }
@@ -166,6 +166,14 @@
       box-shadow: 0 2px 8px rgba(0, 201, 255, 0.2);
     }
 
+    .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .active .arrow {
+      transform: rotate(180deg);
+    }
+
     .recommended-badge {
       background: linear-gradient(90deg, #FF00FF, #9D4CFF);
       padding: 2px 8px;
@@ -177,27 +185,6 @@
       letter-spacing: 0.5px;
       margin-left: 10px;
     }
-
-    .arrow {
-      transition: transform 0.3s ease;
-    }
-
-    .active .arrow {
-      transform: rotate(180deg);
-    }
-
-    .pin-button {
-      margin-left: 10px;
-      font-size: 1rem;
-      background: none;
-      border: none;
-      color: var(--text-color);
-      cursor: pointer;
-    }
-
-    .pinned {
-      font-weight: bold;
-    }
   </style>
 </head>
 <body>
@@ -205,40 +192,74 @@
   <div class="container">
     <h1>🎮 EaglerX Launcher</h1>
 
-    <div class="client-group" id="resent">
+    <!-- Resent Client -->
+    <div class="client-group">
       <div class="client-header" onclick="toggleGroup('resent')">
         <span>Resent Client</span>
         <span class="arrow">↓</span>
       </div>
       <div class="client-versions" id="resent-versions">
-        <div data-client="Resent" class="version-button">
-          <span onclick="selectClient('Resent')">Resent</span>
-          <div style="display: flex; align-items: center;">
+        <button onclick="selectClient('Resent')" class="version-button">
+          <span>Resent</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
             <div class="version-tag js">JS</div>
             <div class="recommended-badge">Recommended</div>
-            <button class="pin-button" onclick="togglePin(event, 'Resent')">📌</button>
           </div>
-        </div>
-        <div data-client="Resent 4.0" class="version-button">
-          <span onclick="selectClient('Resent 4.0')">Resent 4.0</span>
-          <div>
-            <div class="version-tag js">JS</div>
-            <button class="pin-button" onclick="togglePin(event, 'Resent 4.0')">📌</button>
-          </div>
-        </div>
+        </button>
+        <button onclick="selectClient('Resent 4.0')" class="version-button">
+          <span>Resent 4.0</span>
+          <div class="version-tag js">JS</div>
+        </button>
       </div>
     </div>
 
-    <!-- Add more groups (Precision, Classic Versions, etc.) as needed in same format -->
+    <!-- Precision Client -->
+    <div class="client-group">
+      <div class="client-header" onclick="toggleGroup('precision')">
+        <span>Precision Client</span>
+        <span class="arrow">↓</span>
+      </div>
+      <div class="client-versions" id="precision-versions">
+        <button onclick="selectClient('Precision')" class="version-button">
+          <span>Precision</span>
+          <div class="version-tag wasm">WASM</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Classic Versions -->
+    <div class="client-group">
+      <div class="client-header" onclick="toggleGroup('classic')">
+        <span>Classic Versions</span>
+        <span class="arrow">↓</span>
+      </div>
+      <div class="client-versions" id="classic-versions">
+        <button onclick="selectClient('1.12')" class="version-button">
+          <span>1.12</span>
+          <div class="version-tag combined">JS + WASM</div>
+        </button>
+        <button onclick="selectClient('1.5.2')" class="version-button">
+          <span>1.5.2</span>
+          <div class="version-tag wasm">WASM</div>
+        </button>
+        <button onclick="selectClient('22w43a')" class="version-button">
+          <span>22w43a</span>
+          <div class="version-tag js">JS</div>
+        </button>
+        <button onclick="selectClient('1.8.8')" class="version-button">
+          <span>1.8.8</span>
+          <div class="version-tag combined">JS + WASM</div>
+        </button>
+      </div>
+    </div>
   </div>
 
   <script>
-    const pinnedClients = JSON.parse(localStorage.getItem('pinnedClients') || '[]');
-
     function toggleGroup(groupId) {
       const section = document.getElementById(groupId + '-versions');
       const header = section.previousElementSibling;
       const arrow = header.querySelector('.arrow');
+
       section.classList.toggle('active');
       header.classList.toggle('active');
     }
@@ -247,10 +268,19 @@
       const clientUrls = {
         "Resent": "https://super30man.github.io/EaglerX/a4/",
         "Resent 4.0": "https://super30man.github.io/EaglerX/a6",
+        "Precision": "https://super30man.github.io/EaglerX/a3/",
+        "1.12": "https://super30man.github.io/EaglerX/a5/",
+        "1.5.2": "https://super30man.github.io/EaglerX/a1/",
+        "22w43a": "https://super30man.github.io/EaglerX/a2/",
+        "1.8.8": "https://super30man.github.io/EaglerX/a7/"
       };
+
       const url = clientUrls[client];
-      if (url) window.location.href = url;
-      else alert("Client not found.");
+      if (url) {
+        window.location.href = url;
+      } else {
+        alert("Client not found.");
+      }
     }
 
     function toggleTheme() {
@@ -258,31 +288,13 @@
       localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
     }
 
+    // On load, apply saved theme
     (function() {
       const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'light') document.body.classList.add('light');
-
-      document.querySelectorAll('.client-versions').forEach(group => {
-        const items = Array.from(group.children);
-        const pinned = items.filter(el => pinnedClients.includes(el.dataset.client));
-        const others = items.filter(el => !pinnedClients.includes(el.dataset.client));
-        group.innerHTML = '';
-        pinned.forEach(el => group.appendChild(el));
-        others.forEach(el => group.appendChild(el));
-      });
-    })();
-
-    function togglePin(event, clientName) {
-      event.stopPropagation();
-      const index = pinnedClients.indexOf(clientName);
-      if (index === -1) {
-        pinnedClients.push(clientName);
-      } else {
-        pinnedClients.splice(index, 1);
+      if (savedTheme === 'light') {
+        document.body.classList.add('light');
       }
-      localStorage.setItem('pinnedClients', JSON.stringify(pinnedClients));
-      location.reload();
-    }
+    })();
   </script>
 </body>
 </html>

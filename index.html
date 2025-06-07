@@ -279,6 +279,23 @@
       </div>
     </div>
 
+      <!-- Astra Client -->
+    <div class="client-group">
+      <div class="client-header" onclick="toggleGroup('astra 1.5.2')">
+        <span>Astra Client</span>
+        <span class="arrow">↓</span>
+      </div>
+      <div class="client-versions" id="astra 1.5.2-versions">
+        <button onclick="selectClient('Astra 1.5.2')" class="version-button">
+          <span>Astra</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <div class="version-tag js">JS</div>
+          </div>
+          <span class="pin-icon" data-version="Astra" onclick="togglePin(event, 'Astra 1.5.2')">☆</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Classic Versions -->
     <div class="client-group">
       <div class="client-header" onclick="toggleGroup('classic')">
@@ -327,7 +344,8 @@
       "1.12": "https://super30man.github.io/EaglerX/a5/",
       "1.5.2": "https://super30man.github.io/EaglerX/a1/",
       "22w43a": "https://super30man.github.io/EaglerX/a2/",
-      "1.8.8": "https://super30man.github.io/EaglerX/a7/"
+      "1.8.8": "https://super30man.github.io/EaglerX/a7/",
+      "Astra 1.5.2": "https://super30man.github.io/EaglerX/a8"
     };
 
     const versionDetails = {
@@ -337,7 +355,8 @@
       "1.12":         { versionTag: "combined", label: "1.12", recommended: false },
       "1.5.2":        { versionTag: "wasm", label: "1.5.2", recommended: false },
       "22w43a":       { versionTag: "js", label: "22w43a", recommended: false },
-      "1.8.8":        { versionTag: "combined", label: "1.8.8", recommended: false }
+      "1.8.8":        { versionTag: "combined", label: "1.8.8", recommended: false },
+      "Astra 1.5.2":  { versionTag: "js", label: "1.8.8", recommended: false}
     };
 
     // Toggle dropdown groups

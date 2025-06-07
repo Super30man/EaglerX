@@ -6,6 +6,27 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <title>EaglerX</title>
   <style>
+
+    .search-bar {
+      margin: 1rem;
+      text-align: center;
+}
+    .search-bar input {
+      width: 90%;
+      max-width: 400px;
+      padding: 10px 15px;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      background: #1f1f2e;
+      color: white;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+}
+    .search-bar input::placeholder {
+      color: #aaa;
+}
+    
     :root {
       --bg: linear-gradient(135deg, #1a1a2e 0%, #2c1446 100%);
       --container-bg: rgba(255, 255, 255, 0.05);
@@ -225,6 +246,10 @@
   <button class="toggle-theme" onclick="toggleTheme()">🌙 Light/Dark</button>
   <div class="container">
     <h1>🎮 EaglerX Launcher</h1>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search clients or versions..." oninput="filterClients()" />
+    </div>
     
     <!-- Pinned Versions Group -->
     <div class="client-group">
@@ -336,6 +361,25 @@
   </div>
 
   <script>
+    function filterClients() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      const groups = document.querySelectorAll(".client-group");
+
+      groups.forEach(group => {
+        const headerText = group.querySelector(".client-header span").innerText.toLowerCase();
+        const versions = group.querySelectorAll(".version-button");
+        let match = false;
+
+        versions.forEach(btn => {
+          const versionText = btn.innerText.toLowerCase();
+          const isVisible = headerText.includes(input) || versionText.includes(input);
+          btn.style.display = isVisible ? "block" : "none";
+          if (isVisible) match = true;
+      });
+
+      group.style.display = match ? "block" : "none";
+    });
+  }
     // Mappings for client's URLs and extra details for pinned versions
     const clientUrls = {
       "Resent": "https://super30man.github.io/EaglerX/a4/",

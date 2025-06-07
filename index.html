@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <title>EaglerX</title>
+  <style>
+    :root {
+      --bg: linear-gradient(135deg, #1a1a2e 0%, #2c1446 100%);
+      --container-bg: rgba(255, 255, 255, 0.05);
+      --text-color: #fff;
+      --header-bg: rgba(255, 255, 255, 0.08);
+      --hover-bg: rgba(255, 255, 255, 0.12);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --clip-gradient: linear-gradient(90deg, #B388FF, #7C4DFF);
+    }
+
+    body.light {
+      --bg: linear-gradient(135deg, #f4f4f9, #d1d1e0);
+      --container-bg: rgba(255, 255, 255, 0.8);
+      --text-color: #111;
+      --header-bg: rgba(0, 0, 0, 0.08);
+      --hover-bg: rgba(0, 0, 0, 0.05);
+      --border-color: rgba(0, 0, 0, 0.1);
+      --clip-gradient: linear-gradient(90deg, #7C4DFF, #B388FF);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 2rem;
+      transition: all 0.4s ease;
+    }
+
+    .toggle-theme {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--container-bg);
+      border: 1px solid var(--border-color);
+      padding: 10px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      color: var(--text-color);
+      backdrop-filter: blur(10px);
+      z-index: 999;
+      transition: all 0.3s ease;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      padding: 2.5rem;
+      background: var(--container-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transition: all 0.4s ease;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      background: var(--clip-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 800;
+    }
+
+    .client-group {
+      margin-bottom: 1rem;
+      border-radius: 16px;
+      position: relative;
+    }
+
+    .client-header {
+      padding: 1.25rem 1.5rem;
+      background: var(--header-bg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+      border: 1px solid var(--border-color);
+      font-size: 1.1rem;
+    }
+
+    .client-header:hover {
+      background: var(--hover-bg);
+    }
+
+    .client-versions {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+    }
+
+    .client-versions.active {
+      max-height: 300px;
+      border: 1px solid var(--border-color);
+      border-top: none;
+    }
+
+    .version-button {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      background: transparent;
+      border: none;
+      color: var(--text-color);
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+    }
+
+    .version-button:hover {
+      background: var(--hover-bg);
+    }
+
+    .version-tag {
+      padding: 0.25rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+
+    .version-tag.js {
+      background: rgba(255, 255, 255, 0.1);
+      color: #B39DDB;
+    }
+
+    .version-tag.wasm {
+      background: linear-gradient(90deg, #FF00FF, #9D4CFF);
+      color: white;
+      opacity: 1;
+      box-shadow: 0 2px 8px rgba(157, 76, 255, 0.2);
+    }
+
+    .version-tag.combined {
+      background: linear-gradient(90deg, #00C9FF, #92FE9D);
+      color: #111;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0, 201, 255, 0.2);
+    }
+
+    .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .active .arrow {
+      transform: rotate(180deg);
+    }
+
+    .recommended-badge {
+      background: linear-gradient(90deg, #FF00FF, #9D4CFF);
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-left: 10px;
+    }
+    
+    /* Pin icon styling */
+    .pin-icon {
+      cursor: pointer;
+      margin-left: 8px;
+      user-select: none;
+      font-size: 1.2rem;
+      transition: color 0.2s ease;
+      color: var(--text-color);
+    }
+    .pin-icon.active {
+      color: gold;
+    }
+
+    /* Toast notification styling */
+    .toast-notification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      font-size: 1rem;
+      z-index: 1000;
+    }
+    .toast-notification.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-theme" onclick="toggleTheme()">🌙 Light/Dark</button>
+  <div class="container">
+    <h1>🎮 EaglerX Launcher</h1>
+    
+    <!-- Pinned Versions Group -->
+    <div class="client-group">
+      <div class="client-header" onclick="toggleGroup('pinned')">
+        <span>Pinned Versions</span>
+        <span class="arrow">↓</span>
+      </div>
+      <div class="client-versions" id="pinned-versions">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+
+    <!-- Resent Client -->
+    <div class="client-group">
+      <div class="client-header" onclick="toggleGroup('resent')">
+        <span>Resent Client</span>
+        <span class="arrow">↓</span>
+      </div>
+      <div class="client-versions" id="resent-versions">
+        <button onclick="selectClient('Resent')" class="version-button">
+          <span>Resent</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <div class="version-tag js">JS</div>
+            <div class="recommended-badge">Recommended</div>
+          </div>
+          <span class="pin-icon" data-version="Resent" onclick="togglePin(event, 'Resent')">☆</span>
+        </button>
+        <button onclick="selectClient('Resent 4.0')" class="version-button">
+          <span>Resent 4.0</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <div class="version-tag js">JS</div>
+          </div>
+          <span class="pin-icon" data-version="Resent 4.0" onclick="togglePin(event, 'Resent 4.0')">☆</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Precision Client -->
+    <div class="client-group">
+      <div class="client-header" onclick="toggleGroup('precision')">
+        <span>Precision Client</span>
+        <span class="arrow">↓</span>
+      </div>
+      <div class="client-versions" id="precision-versions">
+        <button onclick="selectClient('Precision')" class="version-button">
+          <span>Precision</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <div class="version-tag wasm">WASM</div>
+          </div>
+          <span class="pin-icon" data-version="Precision" onclick="togglePin(event, 'Precision')">☆</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Classic Versions -->
+    <div class="client-group">
+      <div class="client-header" onclick="toggleGroup('classic')">
+        <span>Classic Versions</span>
+        <span class="arrow">↓</span>
+      </div>
+      <div class="client-versions" id="classic-versions">
+        <button onclick="selectClient('1.12')" class="version-button">
+          <span>1.12</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <div class="version-tag combined">JS + WASM</div>
+          </div>
+          <span class="pin-icon" data-version="1.12" onclick="togglePin(event, '1.12')">☆</span>
+        </button>
+        <button onclick="selectClient('1.5.2')" class="version-button">
+          <span>1.5.2</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <div class="version-tag wasm">WASM</div>
+          </div>
+          <span class="pin-icon" data-version="1.5.2" onclick="togglePin(event, '1.5.2')">☆</span>
+        </button>
+        <button onclick="selectClient('22w43a')" class="version-button">
+          <span>22w43a</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <div class="version-tag js">JS</div>
+          </div>
+          <span class="pin-icon" data-version="22w43a" onclick="togglePin(event, '22w43a')">☆</span>
+        </button>
+        <button onclick="selectClient('1.8.8')" class="version-button">
+          <span>1.8.8</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <div class="version-tag combined">JS + WASM</div>
+          </div>
+          <span class="pin-icon" data-version="1.8.8" onclick="togglePin(event, '1.8.8')">☆</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mappings for client's URLs and extra details for pinned versions
+    const clientUrls = {
+      "Resent": "https://super30man.github.io/EaglerX/a4/",
+      "Resent 4.0": "https://super30man.github.io/EaglerX/a6",
+      "Precision": "https://super30man.github.io/EaglerX/a3/",
+      "1.12": "https://super30man.github.io/EaglerX/a5/",
+      "1.5.2": "https://super30man.github.io/EaglerX/a1/",
+      "22w43a": "https://super30man.github.io/EaglerX/a2/",
+      "1.8.8": "https://super30man.github.io/EaglerX/a7/"
+    };
+
+    const versionDetails = {
+      "Resent":       { versionTag: "js", label: "Resent", recommended: true },
+      "Resent 4.0":   { versionTag: "js", label: "Resent 4.0", recommended: false },
+      "Precision":    { versionTag: "wasm", label: "Precision", recommended: false },
+      "1.12":         { versionTag: "combined", label: "1.12", recommended: false },
+      "1.5.2":        { versionTag: "wasm", label: "1.5.2", recommended: false },
+      "22w43a":       { versionTag: "js", label: "22w43a", recommended: false },
+      "1.8.8":        { versionTag: "combined", label: "1.8.8", recommended: false }
+    };
+
+    // Toggle dropdown groups
+    function toggleGroup(groupId) {
+      const section = document.getElementById(groupId + '-versions');
+      const header = section.previousElementSibling;
+      const arrow = header.querySelector('.arrow');
+
+      section.classList.toggle('active');
+      header.classList.toggle('active');
+    }
+
+    // Open the client URL based on key
+    function selectClient(client) {
+      const url = clientUrls[client];
+      if (url) {
+        window.location.href = url;
+      } else {
+        alert("Client not found.");
+      }
+    }
+
+    // Toggle theme and save preference
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+      localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+    }
+
+    // Show a temporary toast notification for feedback
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.className = 'toast-notification';
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.classList.add('visible'), 10);
+      setTimeout(() => {
+        notification.classList.remove('visible');
+        setTimeout(() => document.body.removeChild(notification), 300);
+      }, 2000);
+    }
+
+    // Toggle the pin state for a version using localStorage.
+    function togglePin(event, versionKey) {
+      event.stopPropagation(); // Prevent launching client when clicking the icon
+      let pinned = JSON.parse(localStorage.getItem('pinnedVersions')) || [];
+      const wasPinned = pinned.includes(versionKey);
+      if (wasPinned) {
+        pinned = pinned.filter(v => v !== versionKey);
+        showNotification(`Unpinned ${versionKey}`);
+      } else {
+        pinned.push(versionKey);
+        showNotification(`Pinned ${versionKey}`);
+      }
+      localStorage.setItem('pinnedVersions', JSON.stringify(pinned));
+      updatePinnedDropdown();
+      updatePinIcons();
+    }
+
+    // Update the pin icons in both the static and pinned dropdowns
+    function updatePinIcons() {
+      let pinned = JSON.parse(localStorage.getItem('pinnedVersions')) || [];
+      document.querySelectorAll('.pin-icon').forEach(icon => {
+        let versionKey = icon.getAttribute('data-version');
+        if (pinned.includes(versionKey)) {
+          icon.classList.add('active');
+        } else {
+          icon.classList.remove('active');
+        }
+        // Set star character based on active status
+        icon.textContent = icon.classList.contains('active') ? '★' : '☆';
+      });
+    }
+
+    // Build the pinned versions dropdown based on the stored pins.
+    function updatePinnedDropdown() {
+      let pinned = JSON.parse(localStorage.getItem('pinnedVersions')) || [];
+      let container = document.getElementById('pinned-versions');
+      container.innerHTML = '';
+      pinned.forEach(version => {
+        if (versionDetails[version]) {
+          let details = versionDetails[version];
+          let button = document.createElement('button');
+          button.className = 'version-button';
+          button.onclick = function() { selectClient(version); };
+          // Create the pin-icon element with active (filled star)
+          let pinSpan = document.createElement('span');
+          pinSpan.className = 'pin-icon active';
+          pinSpan.setAttribute('data-version', version);
+          pinSpan.onclick = function(e) { togglePin(e, version); };
+          pinSpan.textContent = '★';
+
+          button.innerHTML = `<span>${details.label}</span>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <div class="version-tag ${details.versionTag}">${details.versionTag.toUpperCase()}</div>
+                ${details.recommended ? '<div class="recommended-badge">Recommended</div>' : ''}
+              </div>`;
+          button.appendChild(pinSpan);
+          container.appendChild(button);
+        }
+      });
+    }
+
+    // On load, apply saved theme and update the pinned dropdown + icons.
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.body.classList.add('light');
+      }
+      updatePinnedDropdown();
+      updatePinIcons();
+    })();
+  </script>
+</body>
+</html>
